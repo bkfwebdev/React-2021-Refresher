@@ -1,28 +1,56 @@
 import Header from './components/Header';
 import Tasks from './components/Tasks';
+import AddTask from './components/AddTask';
 import { useState } from "react";
 
 const  App = (props)  => {
   const [tasks, setTask] = useState([
-    { id: 1, text: "fuck this nigga", day: "June 16th 2021", reminder: true },
+    { id: 1, 
+      text: "some of these", 
+      day: "June 16th 2021 1:00pm", 
+      reminder: true },
     {
       id: 2,
-      text: "fuck that nigga",
-      day: "June 17th 2021",
+      text: "some of them",
+      day: "June 17th 2021 3:00pm",
       reminder: true,
     },
-    { id: 3, text: "fuck those niggas", day: "June 18th 2021", reminder: true },
+    { id: 3, 
+      text: "some of those", 
+      day: "June 18th 2021 5:00pm", 
+      reminder: true },
   ])
 
+//Add Task
+const addTask  = (task) =>{ 
+  const id = Math.floor(Math.random()*1000)+1
+  const newTask = {id,...task}
+  setTask([...tasks,newTask])
+}
+//Delete Task
 const deleteTask = (id)=>{
   setTask(tasks.filter((task)=>task.id !== id))
+}
+
+//Toggle Reminder
+const toggleReminder = (id)=>{
+  setTask(
+    tasks.map((task)=> 
+    task.id === id ? {...task, reminder: 
+      !task.reminder } : task
+      )
+  )
 }
 
 
   return (
     <div className='container'>
       <Header title = {"Task Tracker"} />
-      <Tasks tasks = {tasks}  onDelete = {deleteTask}/>
+      <AddTask onAdd = {addTask} />
+      <Tasks 
+      tasks = {tasks}  
+      onDelete = {deleteTask}
+      onToggle = {toggleReminder} />
     </div> 
   )
 
