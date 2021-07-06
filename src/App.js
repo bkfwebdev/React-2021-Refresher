@@ -3,7 +3,8 @@ import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
 import { useState } from "react";
 
-const  App = (props)  => {
+const  App = (props)  => { 
+  const [showAddTask,setShowAddTask] = useState(false)
   const [tasks, setTask] = useState([
     { id: 1, 
       text: "some of these", 
@@ -45,15 +46,15 @@ const toggleReminder = (id)=>{
 
   return (
     <div className='container'>
-      <Header title = {"Task Tracker"} />
-      <AddTask onAdd = {addTask} />
-      <Tasks 
+      <Header title = {"Task Tracker"} onAdd = {()=> setShowAddTask(!showAddTask)}/>
+      {showAddTask && <AddTask onAdd={addTask}/>}
+      {tasks.length > 0 ? ( <Tasks 
       tasks = {tasks}  
       onDelete = {deleteTask}
-      onToggle = {toggleReminder} />
-    </div> 
+      onToggle = {toggleReminder} />):('No task to show.')}
+    </div>  
   )
 
 }
-
+ 
 export default App
