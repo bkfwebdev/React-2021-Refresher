@@ -1,26 +1,25 @@
 import Header from './components/Header';
 import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const  App = (props)  => { 
   const [showAddTask,setShowAddTask] = useState(false)
-  const [tasks, setTask] = useState([
-    { id: 1, 
-      text: "some of these", 
-      day: "June 16th 2021 1:00pm", 
-      reminder: true },
-    {
-      id: 2,
-      text: "some of them",
-      day: "June 17th 2021 3:00pm",
-      reminder: true,
-    },
-    { id: 3, 
-      text: "some of those", 
-      day: "June 18th 2021 5:00pm", 
-      reminder: true },
-  ])
+  const [tasks, setTask] = useState([])
+
+  useEffect(() => {
+    const getTask = async () => {
+      const taskFromServer = await fetchTask()
+      setTask(taskFromServer)
+    }
+    getTask()
+  })
+
+const fetchTask = async ()=>{
+    const res = await fetch("http://localhost:5000/task")
+    const data = await res.json()
+    return data 
+}
 
 //Add Task
 const addTask  = (task) =>{ 
@@ -29,8 +28,9 @@ const addTask  = (task) =>{
   setTask([...tasks,newTask])
 }
 //Delete Task
-const deleteTask = (id)=>{
-  setTask(tasks.filter((task)=>task.id !== id))
+const deleteTask = async(id) => {
+  await fetch(`http://localhost:5000/task/${id}`, {method : 'DELETE'})
+  setTask(tasks.filter((task)=> task.id !== id))
 }
 
 //Toggle Reminder
